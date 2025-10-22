@@ -25,11 +25,6 @@ if len(df):
 
 # --- 코사인 유사도 계산 ---
 def cosine(q, M):
-    """
-    q: (d,) 질의 벡터
-    M: (n, d) 문서 임베딩 행렬
-    return: (n,) 각 문서와의 코사인 유사도
-    """
     q = np.array(q, dtype="float32")
     M = np.array(M, dtype="float32")
     q = q / (np.linalg.norm(q) + 1e-9)
@@ -45,7 +40,8 @@ def trigger_crawl():
       "keyword": "이혼",
       "pages": 1,
       "debug": true,
-      "delay_ms": [600, 1200]
+      "delay_ms": [600, 1200],
+      "detail": true
     }
     """
     data = request.get_json(force=True) or {}
@@ -53,21 +49,27 @@ def trigger_crawl():
     pages = int(data.get("pages", 1))
     debug = bool(data.get("debug", True))
     delay_ms = data.get("delay_ms", [600, 1200])
+    fetch_detail_flag = bool(data.get("detail", True))  # ★ 전달
 
     if not isinstance(delay_ms, (list, tuple)) or len(delay_ms) != 2:
         delay_ms = (600, 1200)
     else:
         delay_ms = (int(delay_ms[0]), int(delay_ms[1]))
 
-    # [MOD] crawl()이 (out_path, scraped_count, total_available) 3가지를 반환하도록 맞춤
     out_path, scraped, total = crawl(
         keyword=keyword,
         max_pages=pages,
         delay_ms=delay_ms,
-        debug=debug
+        debug=debug,
+        fetch_detail_flag=fetch_detail_flag,  # ★ 전달
     )
-    # [MOD] total 필드 포함해 응답
-    return jsonify({"ok": True, "path": str(out_path), "count": int(scraped), "total": int(total)})
+    return jsonify({
+        "ok": True,
+        "path": str(out_path),
+        "count": int(scraped),
+        "total": int(total),
+        "detail": bool(fetch_detail_flag)
+    })
 
 @app.get("/health")
 def health():
@@ -188,5 +190,4 @@ def rag_api():
     return {"ok": True, "answer": answer, "sources": sources, "top_k": top_k}
 
 if __name__ == "__main__":
-    # 개발 편의를 위해 debug=True 유지
     app.run(host="0.0.0.0", port=5001, debug=True)

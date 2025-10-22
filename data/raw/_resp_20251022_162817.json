@@ -1,7 +1,7 @@
 {
   "status": 200,
   "message": "판례 검색결과 목록 조회가 완료되었습니다.",
-  "timestamp": 1761030888456,
+  "timestamp": 1761118098488,
   "errors": null,
   "data": {
     "dlt_jdcpctRslt": [
