@@ -1,5 +1,29 @@
 # -*- coding: utf-8 -*-
 """
+[역할] 
+- '전문'으로만 되어 있는 판결문을 섹션(판시사항/판결요지/주문/이유/전문/참조조문/참조판례) 단위로 분해한다.
+- RAG 전처리의 1단계: '전문 → 여러 섹션'으로 쪼개어 이후 청크화 품질을 높임.
+
+[입력]
+- data/processed/clean_sections.jsonl 
+  (각 줄: {"case_uid":..., "section_name":"전문", "text":"..."} 형태)
+
+[출력]
+- data/processed/clean_sections_v2.jsonl
+  (각 줄: {"case_uid":..., "section_name":"판시사항|주문|이유|...","text":"..."} 형태)
+
+[언제 다시 쓰나?]
+- 새로 크롤링했거나, 기존 본문 정제 규칙을 바꿨을 때.
+- 섹션 패턴(정규식)을 늘리거나 수정할 때 재실행.
+
+[의존/주의]
+- 한국어 섹션 제목 패턴에 의존. 드물게 인식 못 하는 문서가 있을 수 있음(SECTION_PATTERNS 튜닝).
+"""
+
+
+
+# -*- coding: utf-8 -*-
+"""
 전문(全文) 안에 들어있는 소제목을 인식해 판시사항/주문/이유 등 섹션으로 분해.
 입력 : data/processed/clean_sections.jsonl  (현재는 section_name=전문 하나짜리)
 출력 : data/processed/clean_sections_v2.jsonl (여러 섹션으로 분해)

@@ -1,3 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+[역할]
+- 대법원 포털(https://portal.scourt.go.kr)에서 판결문 목록/상세를 가져와 raw JSONL로 저장한다.
+- RAG 원천 데이터 수집 단계.
+
+[입출력]
+- 출력: data/raw/{keyword}_cases.jsonl
+  (각 줄: {"case_uid":..., "case_no":..., "summary":..., "reason":..., "xml":..., "_detail":"hit|miss", ...})
+
+[핵심 흐름]
+1) 검색 목록 API 호출(키워드, 페이지네이션)
+2) 각 항목의 상세 API/페이지를 다양한 방식으로 시도(Ctxt/Dtl/Ctt, POST/GET/페이지스크랩)
+3) 요약/이유/전문(HTML)을 텍스트화하여 저장
+
+[언제 다시 쓰나?]
+- 새로운 키워드나 기간으로 '추가 수집'이 필요할 때.
+- 기존 데이터가 너무 오래되어 업데이트가 필요할 때.
+
+[의존/주의]
+- requests + BeautifulSoup 필요.
+- 포털의 응답 포맷/보안정책이 바뀌면 엔드포인트/헤더/페이로드를 조정해야 함.
+- 과도한 요청 방지를 위해 delay_ms 튜닝 가능.
+"""
+
+
+
 # ingestion/scourt_crawler.py
 import time, random, json, requests, datetime, re
 from pathlib import Path

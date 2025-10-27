@@ -1,3 +1,32 @@
+# -*- coding: utf-8 -*-
+"""
+[역할]
+- 섹션 텍스트를 문장 단위로 분할한 뒤, 길이(문자 수) 기준으로 묶어 '청크'를 생성한다.
+- RAG 전처리의 2단계: '섹션 → 청크(JSONL)'로 만들어 임베딩/벡터DB에 넣을 준비를 함.
+
+[입력]
+- data/processed/clean_sections_v2.jsonl
+  (각 줄: {"case_uid":..., "section_name":..., "text":"..."} )
+
+[출력]
+- data/processed/chunks.jsonl (혹은 너희가 만든 최종 파일: chunks_cleaned.jsonl)
+  (각 줄: {"case_uid":..., "section_name":..., "chunk_index":0.., "text":"...", "char_len":..., "hash":"..."} )
+
+[파라미터]
+- --max / --min / --hard 로 청크 길이 조절(문자 기준).
+  예: --max 900 --min 500 --hard 1200
+
+[언제 다시 쓰나?]
+- 섹션 파일이 갱신되었거나, 청크 길이 전략을 바꾸고 싶을 때.
+- 청크 생성 규칙(문장분리, normalize)을 수정한 뒤 재생성할 때.
+
+[의존/주의]
+- 문장분리기가 단순 규칙 기반이라 일부 문장 경계가 덜 자연스러울 수 있음(실무에서 후속 튜닝 가능).
+"""
+
+
+
+
 # data/raw/clean_to_chunks_v2.py
 import os, json, re, argparse, hashlib
 from pathlib import Path
