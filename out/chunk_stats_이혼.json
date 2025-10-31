@@ -1,0 +1,40 @@
+{
+  "cases": 207,
+  "chunks": 1445,
+  "by_section": {
+    "판결요지": 127,
+    "판시사항": 136,
+    "주문": 0,
+    "판례내용": 981,
+    "전문": 0,
+    "참조조문": 114,
+    "참조판례": 87
+  },
+  "dropped_empty_sections": 0,
+  "deduped": 27,
+  "policy": {
+    "min_chars": 350,
+    "soft_max": 1200,
+    "hard_max": 1600,
+    "section_index_fixed_map": {
+      "판결요지": 0,
+      "판시사항": 1,
+      "주문": 2,
+      "판례내용": 4,
+      "전문": 5,
+      "참조조문": 6,
+      "참조판례": 7
+    },
+    "section_order": [
+      "판결요지",
+      "판시사항",
+      "주문",
+      "판례내용",
+      "전문",
+      "참조조문",
+      "참조판례"
+    ]
+  },
+  "inputs": "out\\precedents_cleaned_이혼.json",
+  "outputs": "out\\chunks_이혼.jsonl"
+}
